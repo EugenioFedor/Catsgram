@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 import java.time.Instant;
 
-@EqualsAndHashCode(of = { "id" })
+@EqualsAndHashCode(of = {"id"})
 @Data
 public class Post {
     Long id;
