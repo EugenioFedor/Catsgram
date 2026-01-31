@@ -4,11 +4,13 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.catsgram.exception.ConditionsNotMetException;
 import ru.yandex.practicum.catsgram.exception.NotFoundException;
 import ru.yandex.practicum.catsgram.model.Post;
+import ru.yandex.practicum.catsgram.model.SortOrder;
 
 import java.time.Instant;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // Указываем, что класс PostService - является бином и его
 // нужно добавить в контекст приложения
@@ -16,8 +18,25 @@ import java.util.Map;
 public class PostService {
     private final Map<Long, Post> posts = new HashMap<>();
 
-    public Collection<Post> findAll() {
-        return posts.values();
+    public Collection<Post> findAll(SortOrder sortOrder, int from, int size) {
+        if (from < 0) {
+            throw new ConditionsNotMetException("'from' не может быть меньше 0");
+        }
+        if (size <= 0) {
+            throw new ConditionsNotMetException("'size' должен быть больше 0");
+        }
+
+        return posts.values().stream()
+                .sorted((p1, p2) -> {
+                    if (sortOrder == SortOrder.ASCENDING) {
+                        return p1.getPostDate().compareTo(p2.getPostDate());
+                    } else {
+                        return p2.getPostDate().compareTo(p1.getPostDate());
+                    }
+                })
+                .skip(from)
+                .limit(size)
+                .collect(Collectors.toList());
     }
 
     public Post create(Post post) {
@@ -29,6 +48,14 @@ public class PostService {
         post.setPostDate(Instant.now());
         posts.put(post.getId(), post);
         return post;
+    }
+
+    public Post getPostById (Long postId) {
+        if (posts.containsKey(postId)) {
+            return posts.get(postId);
+        } else {
+            throw new NotFoundException("Пост с id = " + postId + " не найден");
+        }
     }
 
     public Post update(Post newPost) {

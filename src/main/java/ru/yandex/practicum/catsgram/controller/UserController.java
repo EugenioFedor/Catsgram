@@ -16,6 +16,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/users/{userId}")
+    public User getUser (@PathVariable Long userId) {
+        return userService.getUserById(userId);
+    }
+
     @GetMapping
     public Collection<User> findAll() {
         return userService.findAll();

@@ -2,6 +2,7 @@ package ru.yandex.practicum.catsgram.controller;
 
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.catsgram.model.Post;
+import ru.yandex.practicum.catsgram.model.SortOrder;
 import ru.yandex.practicum.catsgram.service.PostService;
 
 import java.util.Collection;
@@ -15,9 +16,19 @@ public class PostController {
         this.postService = postService;
     }
 
+    @GetMapping("/posts/{postId}")
+    public Post getPost (@PathVariable Long postId) {
+        return postService.getPostById(postId);
+    }
+
     @GetMapping
-    public Collection<Post> findAll() {
-        return postService.findAll();
+    public Collection<Post> findAll(
+            @RequestParam(defaultValue = "desc") String sort,
+            @RequestParam(defaultValue = "0") int from,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        SortOrder sortOrder = SortOrder.from(sort);
+        return postService.findAll(sortOrder, from, size);
     }
 
     @PostMapping
