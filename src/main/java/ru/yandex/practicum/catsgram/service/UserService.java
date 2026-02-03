@@ -29,7 +29,7 @@ public class UserService {
         return users.values();
     }
 
-    public User getUserById (Long userId) {
+    public User getUserById(Long userId) {
         if (users.containsKey(userId)) {
             return users.get(userId);
         } else {

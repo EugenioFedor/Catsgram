@@ -50,7 +50,7 @@ public class PostService {
         return post;
     }
 
-    public Post getPostById (Long postId) {
+    public Post getPostById(Long postId) {
         if (posts.containsKey(postId)) {
             return posts.get(postId);
         } else {
