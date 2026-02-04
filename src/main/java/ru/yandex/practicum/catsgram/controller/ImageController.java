@@ -25,4 +25,18 @@ public class ImageController {
                                      @RequestParam("image") List<MultipartFile> files) {
         return imageService.saveImages(postId, files);
     }
+
+    @GetMapping(value = "/images/{imageId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<byte[]> downloadImage(@PathVariable long imageId) {
+        ImageData imageData = imageService.getImageData(imageId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDisposition(
+                ContentDisposition.attachment()
+                        .filename(imageData.getName())
+                        .build()
+        );
+
+        return new ResponseEntity<>(imageData.getData(), headers, HttpStatus.OK);
+    }
+
 }
