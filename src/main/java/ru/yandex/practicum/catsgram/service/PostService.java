@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 // Указываем, что класс PostService - является бином и его
@@ -81,4 +82,12 @@ public class PostService {
                 .orElse(0);
         return ++currentMaxId;
     }
+
+    public Optional<Post> findById(long postId) {
+        return posts.values()
+                .stream()
+                .filter(post -> post.getId() == postId)
+                .findFirst();
+    }
+
 }

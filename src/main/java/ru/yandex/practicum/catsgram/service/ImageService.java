@@ -119,4 +119,12 @@ public class ImageService {
                 .orElse(0);
         return ++currentMaxId;
     }
+
+    public List<Image> getPostImages(long postId) {
+        return images.values()
+                .stream()
+                .filter(image -> image.getPostId() == postId)
+                .collect(Collectors.toList());
+    }
+
 }
